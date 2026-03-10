@@ -15,29 +15,52 @@
   </head>
   <body>
     <section class="section-center">
+        <section class="section-center">
+  <!-- Form -->
+  <form>
+    <h2>grocery bud</h2>
+    <div class="form-control">
+      <input type="text" class="form-input" placeholder="e.g. eggs" />
+      <button type="submit" class="btn">add item</button>
+    </div>
+  </form>
+
+  <!-- Items List -->
+  <div class="items">
+    <!-- ... existing items code ... -->
+  </div>
+</section>
       <!-- Items List -->
-      <div class="items">
-        {% for item in items %}
-        <div class="single-item">
-          <input type="checkbox" {% if item.completed %}checked{% endif %} />
-          <p
-            style="text-decoration: {% if item.completed %}line-through{% else %}none{% endif %}"
-          >
-            {{ item.name }}
-          </p>
+
+<div class="items">
+  {% for item in items %}
+      <div class="single-item">
+          <form method="POST" action="{% url 'grocery:toggle' item.id %}">
+              {% csrf_token %}
+              <input type="checkbox"
+                      {% if item.completed %}checked{% endif %}
+                      onchange="this.form.submit()" />
+          </form>
+          <p style="text-decoration: {% if item.completed %}line-through{% else %}none{% endif %}">{{ item.name }}</p>
           <a href="#" class="btn icon-btn edit-btn">
-            <i class="fa-regular fa-pen-to-square"></i>
+              <i class="fa-regular fa-pen-to-square"></i>
           </a>
-          <button class="btn icon-btn remove-btn" type="submit">
-            <i class="fa-regular fa-trash-can"></i>
-          </button>
-        </div>
-        {% empty %}
-        <p style="text-align: center; color: #888;">
-          No items yet. Add one above!
-        </p>
-        {% endfor %}
+          <form
+  method="POST"
+  action="{% url 'grocery:delete' item.id %}"
+  style="display: inline"
+>
+  {% csrf_token %}
+  <button type="submit" class="btn icon-btn remove-btn">
+    <i class="fa-regular fa-trash-can"></i>
+  </button>
+</form>
       </div>
+  {% empty %}
+      <p style="text-align: center; color: #888;">No items yet. Add one above!</p>
+  {% endfor %}
+</div>
+
     </section>
   </body>
 </html>
